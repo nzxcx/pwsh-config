@@ -114,13 +114,8 @@ try {
     Install-ToolWithScoop -ToolName $tool
   }
 
-  # Clone configuration repository
-  $repoUrl = "https://github.com/nzxcx/pwsh-config.git"
-  $destPath = "$env:USERPROFILE\.config\pwsh"
-  Clone-Repository -RepoUrl $repoUrl -DestPath $destPath
-
   # Modify PowerShell profile
-  $newProfilePath = "$env:USERPROFILE\.config\pwsh\profile.ps1"
+  $newProfilePath = "$env:USERPROFILE\.config\pwsh-config\profile.ps1"
   $content = ". '$newProfilePath'"
 
   if (!(Test-Path -Path $PROFILE)) {
