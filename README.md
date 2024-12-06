@@ -1,4 +1,20 @@
-# Configuration for PowerShell
+# My own powershell configuration for windows
+
+## Contains: 
+Aliases, functions and Gum scripts for handling git branches, git conventionnal commits
+
+The script install automatically:
+- Scoop
+- starship
+- zoxide
+- eza
+- PSReadline
+- Terminal-Icons
+- PSFzf
+- gum
+- lazygit
+- bat
+- ripgrep
 
 ## Installation
 
