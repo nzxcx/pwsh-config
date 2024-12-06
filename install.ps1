@@ -161,10 +161,6 @@ try {
     Install-ModuleWithCheck -ModuleName $module
   }
 
-  # Ensure necessary Scoop buckets are added
-  Add-ScoopBucket -BucketName "extras"
-  Add-ScoopBucket -BucketName "nerd-fonts"
-
   # Install tools using Scoop
   $tools = @(
     "gum",
