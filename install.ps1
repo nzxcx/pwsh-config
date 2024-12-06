@@ -2,7 +2,7 @@
 .SYNOPSIS
 This script installs essential PowerShell modules and tools and configures the PowerShell profile.
 .DESCRIPTION
-It installs PSReadLine, Terminal-Icons, PSFzf, gum, lazygit, bat, and ripgrep using Scoop.
+It installs PSReadLine, Terminal-Icons, PSFzf, Starship, zoxide, eza, gum, lazygit, bat, and ripgrep using Scoop.
 Additionally, it sets up the PowerShell profile to import configurations from a separate file.
 #>
 
@@ -23,6 +23,34 @@ function Install-ModuleWithCheck {
   }
   else {
     Write-Host "$ModuleName is already installed." -ForegroundColor Yellow
+  }
+}
+
+# Function to ensure Scoop buckets are available
+function Add-ScoopBucket {
+  param (
+    [string]$BucketName,
+    [string]$BucketUrl = ""
+  )
+  
+  Write-Host "Checking Scoop bucket: $BucketName..." -ForegroundColor Cyan
+  $buckets = scoop bucket list
+  if ($buckets -notcontains $BucketName) {
+    try {
+      if ($BucketUrl) {
+        scoop bucket add $BucketName $BucketUrl
+      }
+      else {
+        scoop bucket add $BucketName
+      }
+      Write-Host "Added Scoop bucket: $BucketName" -ForegroundColor Green
+    }
+    catch {
+      Write-Host "Failed to add Scoop bucket $BucketName. Error: $_" -ForegroundColor Red
+    }
+  }
+  else {
+    Write-Host "Scoop bucket $BucketName is already added." -ForegroundColor Yellow
   }
 }
 
@@ -133,8 +161,20 @@ try {
     Install-ModuleWithCheck -ModuleName $module
   }
 
+  # Ensure necessary Scoop buckets are added
+  Add-ScoopBucket -BucketName "extras"
+  Add-ScoopBucket -BucketName "nerd-fonts"
+
   # Install tools using Scoop
-  $tools = @("gum", "lazygit", "bat", "ripgrep")
+  $tools = @(
+    "gum",
+    "lazygit",
+    "bat",
+    "ripgrep",
+    "starship",
+    "zoxide", 
+    "eza" 
+  )
   foreach ($tool in $tools) {
     Install-ToolWithScoop -ToolName $tool
   }
@@ -144,6 +184,9 @@ try {
   Set-PowerShellProfile -ConfigPath $configPath
 
   Write-Host "All operations completed successfully." -ForegroundColor Green
+  Write-Host @"
+
+"@ -ForegroundColor Cyan
 }
 catch {
   Write-Host "An error occurred during script execution: $_" -ForegroundColor Red
