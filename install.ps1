@@ -40,7 +40,10 @@ function Install-ToolWithScoop {
     if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
       Write-Host "Scoop is not installed. Installing Scoop..." -ForegroundColor Yellow
       try {
-        Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+        # Use a more reliable method to install Scoop
+        Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+        # Refresh the PATH to include Scoop
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
       }
       catch {
         Write-Host "Failed to install Scoop. Error: $_" -ForegroundColor Red
@@ -62,34 +65,6 @@ function Install-ToolWithScoop {
   }
 }
 
-# Function to clone the repository
-function Clone-Repository {
-  param (
-    [string]$RepoUrl,
-    [string]$DestPath
-  )
-
-  # Check if Git is installed
-  if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "Git is not installed. Please install Git and try again." -ForegroundColor Red
-    return
-  }
-
-  # Check if the destination directory already exists
-  if (Test-Path $DestPath) {
-    Write-Host "Destination directory already exists. Skipping clone operation." -ForegroundColor Yellow
-    return
-  }
-
-  # Attempt to clone the repository
-  try {
-    git clone $RepoUrl $DestPath
-    Write-Host "Repository cloned successfully to $DestPath" -ForegroundColor Green
-  }
-  catch {
-    Write-Host "Failed to clone repository: $_" -ForegroundColor Red
-  }
-}
 
 # Main execution block
 try {
