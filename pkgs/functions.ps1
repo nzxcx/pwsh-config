@@ -20,6 +20,10 @@ function find-file($name) {
   }
 }
 
+function op {
+  explorer .
+}
+
 function set-title([string]$newtitle) {
   $host.ui.RawUI.WindowTitle = $newtitle + ' – ' + $host.ui.RawUI.WindowTitle
 }
@@ -37,3 +41,4 @@ function Go-GreatGrandparentDirectory { Set-Location ../../.. }
 Set-Alias -Name '....' -Value Go-GreatGrandparentDirectory
 function Go-GreatGreatGrandparentDirectory { Set-Location ../../../.. }
 Set-Alias -Name '.....' -Value Go-GreatGreatGrandparentDirectory
+
